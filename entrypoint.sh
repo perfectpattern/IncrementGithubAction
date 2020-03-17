@@ -21,9 +21,9 @@ git clone https://github.com/$realActor/$realRepo.git || exit 1
 buildExist=""
 if [[ $GITHUB_REF == *dev ]]; then
     echo "dev branch action"
-	cd $realRepo
+	cd $realRepo || exit 1
 	git checkout dev || exit 1
-	cd ..
+	cd .. || exit 1
 	echo "after dev checkout"
 	buildExist="$(cd $realRepo && git tag | grep dev)"
 else
@@ -59,7 +59,7 @@ else
 	echo $tag
 fi
 
-cd $realRepo
+cd $realRepo || exit 1
 git remote set-url --push origin https://$realActor:$GITHUB_TOKEN@github.com/$realActor/$realRepo || exit 1
 git tag $tag || exit 1
 
