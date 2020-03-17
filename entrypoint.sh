@@ -1,6 +1,9 @@
 #!/bin/bash
 
 echo $GITHUB_REPOSITORY
+echo $GITHUB_EVENT_NAME
+echo $GITHUB_WORKFLOW
+echo $GITHUB_REF
 
 realActor=""
 realRepo=""
