@@ -16,7 +16,7 @@ done <<< $GITHUB_REPOSITORY
 echo $realActor
 echo $realRepo
 
-git clone https://github.com/$realActor/$realRepo.git
+git clone https://github.com/$realActor/$realRepo.git || exit 1
 
 buildExist=""
 if [[ $GITHUB_REF == *dev ]]; then
