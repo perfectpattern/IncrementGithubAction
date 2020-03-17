@@ -17,20 +17,46 @@ echo $realActor
 echo $realRepo
 
 git clone https://github.com/$realActor/$realRepo.git
-buildExist="$(cd $realRepo && git tag | grep build)"
+
+buildExist=""
+if [[ $GITHUB_REF == *dev ]]; then
+    echo "dev branch action"
+	cd $realRepo
+	git checkout dev
+	cd ..
+	echo "after dev checkout"
+	buildExist="$(cd $realRepo && git tag | grep dev)"
+else
+    echo "master branch action"
+	buildExist="$(cd $realRepo && git tag | grep build)"
+fi
 
 tag=""
 if [[ $buildExist ]]; then
-    echo "buildnr increment"
-	lastestBuildNr="$(cd $realRepo && git tag | grep build | sort -V -r | head -n1 | cut -c 7-)"
-	echo $lastestBuildNr
-	lastestBuildNr=$((lastestBuildNr+1))
-	echo $lastestBuildNr
-	tag="build-${lastestBuildNr}"
-	echo $tag
+	echo "buildnr increment"
+	if [[ $GITHUB_REF == *dev ]]; then
+		lastestBuildNr="$(cd $realRepo && git tag | grep dev | sort -V -r | head -n1 | cut -c 5-)"
+		echo $lastestBuildNr
+		lastestBuildNr=$((lastestBuildNr+1))
+		echo $lastestBuildNr
+		tag="dev-${lastestBuildNr}"
+		echo $tag
+	else
+		lastestBuildNr="$(cd $realRepo && git tag | grep build | sort -V -r | head -n1 | cut -c 7-)"
+		echo $lastestBuildNr
+		lastestBuildNr=$((lastestBuildNr+1))
+		echo $lastestBuildNr
+		tag="build-${lastestBuildNr}"
+		echo $tag
+	fi
 else
     echo "no buildnr"
-	tag="build-1"
+	if [[ $GITHUB_REF == *dev ]]; then
+		tag="dev-1"
+	else
+		tag="build-1"
+	fi
+	echo $tag
 fi
 
 cd $realRepo
