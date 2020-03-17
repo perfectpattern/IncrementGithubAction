@@ -22,6 +22,7 @@ buildExist=""
 if [[ $GITHUB_REF == *dev ]]; then
     echo "dev branch action"
 	git checkout dev
+	echo "after dev checkout"
 	buildExist="$(cd $realRepo && git tag | grep dev)"
 else
     echo "master branch action"
