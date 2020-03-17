@@ -36,10 +36,6 @@ if [[ $buildExist ]]; then
 	echo "buildnr increment"
 	if [[ $GITHUB_REF == *dev ]]; then
 		lastestBuildNr="$(cd $realRepo && git tag | grep dev | sort -V -r | head -n1 | cut -c 5-)"
-		if [[ $lastestBuildNr ]]; then
-			echo "lastestBuildNr is empty and that should not happen"
-			exit 1
-		fi
 		echo $lastestBuildNr
 		lastestBuildNr=$((lastestBuildNr+1))
 		echo $lastestBuildNr
