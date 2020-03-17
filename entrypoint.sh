@@ -21,15 +21,11 @@ git clone https://github.com/$realActor/$realRepo.git
 buildExist=""
 if [[ $GITHUB_REF == *dev ]]; then
     echo "dev branch action"
-	pwd
 	cd $realRepo
-	pwd
 	git checkout dev
 	cd ..
-	pwd
 	echo "after dev checkout"
 	buildExist="$(cd $realRepo && git tag | grep dev)"
-	echo $buildExist
 else
     echo "master branch action"
 	buildExist="$(cd $realRepo && git tag | grep build)"
@@ -39,9 +35,6 @@ tag=""
 if [[ $buildExist ]]; then
 	echo "buildnr increment"
 	if [[ $GITHUB_REF == *dev ]]; then
-		cd $realRepo
-		git tag
-		cd ..
 		lastestBuildNr="$(cd $realRepo && git tag | grep dev | sort -V -r | head -n1 | cut -c 5-)"
 		echo $lastestBuildNr
 		lastestBuildNr=$((lastestBuildNr+1))
