@@ -16,14 +16,14 @@ done <<< $GITHUB_REPOSITORY
 echo $realActor
 echo $realRepo
 
-git clone https://github.com/$realActor/$realRepo.git
+git clone https://github.com/$realActor/$realRepo.git || exit 1
 
 buildExist=""
 if [[ $GITHUB_REF == *dev ]]; then
     echo "dev branch action"
-	cd $realRepo
-	git checkout dev
-	cd ..
+	cd $realRepo || exit 1
+	git checkout dev || exit 1
+	cd .. || exit 1
 	echo "after dev checkout"
 	buildExist="$(cd $realRepo && git tag | grep dev)"
 else
@@ -59,8 +59,8 @@ else
 	echo $tag
 fi
 
-cd $realRepo
-git remote set-url --push origin https://$realActor:$GITHUB_TOKEN@github.com/$realActor/$realRepo
-git tag $tag
+cd $realRepo || exit 1
+git remote set-url --push origin https://$realActor:$GITHUB_TOKEN@github.com/$realActor/$realRepo || exit 1
+git tag $tag || exit 1
 
-git push origin $tag
+git push origin $tag || exit 1
