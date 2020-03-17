@@ -22,7 +22,7 @@ buildExist=""
 if [[ $GITHUB_REF == *dev ]]; then
     echo "dev branch action"
 	cd $realRepo
-	git checkout dev
+	git checkout dev || exit 1
 	cd ..
 	echo "after dev checkout"
 	buildExist="$(cd $realRepo && git tag | grep dev)"
@@ -36,6 +36,10 @@ if [[ $buildExist ]]; then
 	echo "buildnr increment"
 	if [[ $GITHUB_REF == *dev ]]; then
 		lastestBuildNr="$(cd $realRepo && git tag | grep dev | sort -V -r | head -n1 | cut -c 5-)"
+		if [[ $buildExist ]]; then
+			echo "lastestBuildNr is empty and that should not happen"
+			exit 1
+		fi
 		echo $lastestBuildNr
 		lastestBuildNr=$((lastestBuildNr+1))
 		echo $lastestBuildNr
@@ -60,7 +64,7 @@ else
 fi
 
 cd $realRepo
-git remote set-url --push origin https://$realActor:$GITHUB_TOKEN@github.com/$realActor/$realRepo
-git tag $tag
+git remote set-url --push origin https://$realActor:$GITHUB_TOKEN@github.com/$realActor/$realRepo || exit 1
+git tag $tag || exit 1
 
-git push origin $tag
+git push origin $tag || exit 1
