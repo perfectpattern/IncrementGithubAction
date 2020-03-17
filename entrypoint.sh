@@ -21,7 +21,12 @@ git clone https://github.com/$realActor/$realRepo.git
 buildExist=""
 if [[ $GITHUB_REF == *dev ]]; then
     echo "dev branch action"
+	pwd
+	cd $realRepo
+	pwd
 	git checkout dev
+	cd ..
+	pwd
 	echo "after dev checkout"
 	buildExist="$(cd $realRepo && git tag | grep dev)"
 else
